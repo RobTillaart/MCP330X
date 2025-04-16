@@ -16,6 +16,8 @@ Arduino library for MCP3302 and MCP3304 13-Bit Differential ADC, SPI
 
 ## Description
 
+**Experimental**
+
 This library reads the channels of the MCP3302 and MCP3304 ADC convertors.
 
 The devices have 4 or 8 channels, 13 bit and communicates with SPI.
