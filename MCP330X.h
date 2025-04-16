@@ -39,10 +39,13 @@ public:
 
   void     begin(uint8_t select);
 
+  //  return config values.
   uint8_t  channels();
   int16_t  maxValue();
 
+  //  channel = 0..3 or 0..7
   int16_t  read(uint8_t channel);
+  //  pair = 0..3 or 0..7
   int16_t  differentialRead(uint8_t pair);
 
 

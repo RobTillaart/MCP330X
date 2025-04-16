@@ -16,20 +16,25 @@ Arduino library for MCP3302 and MCP3304 13-Bit Differential ADC, SPI
 
 ## Description
 
-This library reads the channels of the MCP3302 and MCP3304 ADC convertors. 
+This library reads the channels of the MCP3302 and MCP3304 ADC convertors.
 
 The devices have 4 or 8 channels, 13 bit and communicates with SPI.
 The library supports both hardware SPI and software SPI.
+The devices are meant for 5V operation.
 
 
-|  type     |  bits  |  channels  |  pairs  |  notes  |
-|:----------|:------:|:----------:|:-------:|:--------|
-|  MCP3302  |   13   |      4     |    2    |
-|  MCP3304  |   13   |      8     |    4    |
+|  type     |  bits  |  SPS   |  channels  |  pairs  |  notes  |
+|:----------|:------:|:------:|:----------:|:-------:|:--------|
+|  MCP3302  |  1+12  |  100k  |      4     |    2    |
+|  MCP3304  |  1+12  |  100k  |      8     |    4    |
 
-Note one bit is the sign bit, so only 12 bit magnitude (-4096..4095).
+One bit is sign bit, 12 bit is magnitude (-4096..4095).
 
-The code of the library is based upon MCP_ADC library which is quite similar. 
+Read datasheet for all details.
+
+The MCP3302/04-B is slightly more accurate than the MCP3302/04-C version.
+
+The code of the library is based upon MCP_ADC library which is quite similar.
 Nevertheless not all functionality of that library is implemented.
 
 Library is not tested with hardware yet.
@@ -49,6 +54,9 @@ Feedback as always is welcome.
 |   5     |    5     |    4     |      |  V   |
 |   6     |    6     |    7     |      |  V   |
 |   7     |    7     |    6     |      |  V   |
+
+The library does not support other pairs in differential mode (yet).
+ONe can do this by make two **read()** calls.
 
 
 ### Performance
@@ -71,7 +79,6 @@ MCP3304 is 2x as slow as it has 2x as much channels.
 |   0.1.0   |  diffRead  |  SWSPI  |         |   1836    |    3752   |
 
 
-
 Indicative numbers Arduino ESP32, reading all channels / pairs (4 or 8).
 
 
@@ -84,6 +91,8 @@ Indicative numbers Arduino ESP32, reading all channels / pairs (4 or 8).
 |   0.1.0   |  read      |  SWSPI  |         |     56    |    107    |
 |   0.1.0   |  diffRead  |  SWSPI  |         |     55    |    108    |
 
+
+TODO: verify max SPI clock frequency the device works with.
 
 
 ### Related
@@ -109,19 +118,23 @@ Indicative numbers Arduino ESP32, reading all channels / pairs (4 or 8).
 - **(uint8_t dataIn, uint8_t dataOut, uint8_t clock)**
 
 The derived classes have both constructors with same parameters.
-- **MCP3302(...)** constructor 10 bit ADC 2 channel.
-- **MCP3304(...)** constructor 10 bit ADC 4 channel.
+- **MCP3302(...)** constructor 1+12 bit ADC 4 channel.
+- **MCP3304(...)** constructor 1+12 bit ADC 8 channel.
 
 ### Base
 
-- **void begin(uint8_t select)** set select pin.
-- **uint8_t channels()** returns the number of channels.
-- **int16_t maxValue()** returns 4095 maxReading of the ADC.
+- **void begin(uint8_t select)** set select pin. Initialies the internals.
+- **uint8_t channels()** returns the number of channels (4 or 8)
+- **int16_t maxValue()** returns 4095, the maxReading of the ADC.
 
 ### Read
 
 - **int16_t read(uint8_t channel)** reads the value of a single channel.
-- **int16_t differentialRead(uint8_t pair)** reads differential between two channels.  
+channel = 0..3 or 0..7.
+The value returned is 0..4095.
+- **int16_t differentialRead(uint8_t pair)** reads differential between two channels.
+pair = 0..3 or 0..7
+The value returned is -4096..4095.
 Check datasheet for details. See table above.
 
 ### SPI
@@ -145,12 +158,18 @@ of the ADC first to get optimal speed.
 
 #### Should
 
+- verify max SPI clock frequency the device works with.
 - add examples
-- check interface to grow?
 
 #### Could
 
-- **int16_t differentialRead(uint8_t chan1, uint8_t chan2)** ?
+- check interface to extend functionality.
+- int16_t differentialRead(chan1, chan2) for all pairs
+- float voltage(channel) interface as 5V fixed (+ set 5.000 Vref.)
+  would add float lib (footprint).
+- improve performance SWSPI see figure 6.2 -> 20 bit iso 24 (16%)
+  more complex, first test the lib as is.
+- diffRead() short for differentialRead()?
 
 #### Wont
 
