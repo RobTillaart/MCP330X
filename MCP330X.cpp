@@ -130,7 +130,7 @@ int16_t MCP330X::readADC(uint8_t channel, bool single)
   //  datasheet figure 6.4 page 27
   uint8_t  data[3] = { 0, 0, 0 };
   data[0] = 0x08;                      //  start bit
-  if (single) data[0] |= 0x40;         //  single read | differential
+  if (single) data[0] |= 0x04;         //  single read | differential
   data[0] |= channel >> 1;             //  channel d2 and d1;
   if (channel & 0x01) data[1] = 0x80;  //  channel d0
 
@@ -234,4 +234,3 @@ MCP3304::MCP3304(uint8_t dataIn, uint8_t dataOut, uint8_t clock)
 
 
 //  -- END OF FILE --
-
