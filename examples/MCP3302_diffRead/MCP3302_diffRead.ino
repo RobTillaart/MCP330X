@@ -59,6 +59,7 @@ void loop()
     Serial.print("\t");
   }
   Serial.println();
+  Serial.println();
 
   delay(1000);
 }

@@ -1,8 +1,8 @@
 //
 //    FILE: MCP330X.cpp
 //  AUTHOR: Rob Tillaart
-// VERSION: 0.1.0
-//    DATE: 2015-04-16
+// VERSION: 0.2.0
+//    DATE: 2025-04-16
 // PURPOSE: Arduino library for MCP3302 and MCP3304 13-Bit Differential ADC, SPI
 //     URL: https://github.com/RobTillaart/MCP330X
 //
@@ -234,3 +234,4 @@ MCP3304::MCP3304(uint8_t dataIn, uint8_t dataOut, uint8_t clock)
 
 
 //  -- END OF FILE --
+
